@@ -1,12 +1,7 @@
 name: Java with Maven Automated Testing Pipeline
 
 on:
-  push:
-    branches: [ "main" ]
-   # paths:
-   # - 'selenium-test/*'
-  pull_request:
-    branches: [ "main" ]
+  workflow_run:
 
 jobs:
   selenium-test :
