@@ -33,7 +33,18 @@ jobs:
         
       - name: Checkout code
         uses: actions/checkout@v4
-        
+      # Download the latest version of ChromeDriver
+      - name: Download ChromeDriver
+        run: |
+          LATEST_VERSION=$(curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE)
+          wget -q "https://chromedriver.storage.googleapis.com/$LATEST_VERSION/chromedriver_linux64.zip" -O chromedriver.zip
+          unzip chromedriver.zip
+          chmod +x chromedriver
+          mv chromedriver /usr/local/bin/
+
+      # Install Chrome browser (optional)
+      - name: Install Chrome browser
+        run: sudo apt-get install -y google-chrome-stable
      # - name: Change Directory
       #  run: cd nightwatch-test
 
