@@ -31,11 +31,12 @@ jobs:
       
      # - name: Change Directory
       #  run: cd nightwatch-test
-
+   
+    
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '21'
+          node-version: 21
           cache: 'npm' 
       - name: npm-install
         run: |
