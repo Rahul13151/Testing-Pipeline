@@ -1,7 +1,7 @@
 name: Java with Maven Automated Testing Pipeline
 
 on:
-  workflow_run:
+  workflow_dispatch:
 
 jobs:
   selenium-test :
