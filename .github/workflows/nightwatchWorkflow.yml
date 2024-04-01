@@ -38,4 +38,4 @@ jobs:
         run: |
           cd nightwatch-test
           npm install
-           node nightwatch.json
+           npm nightwatch.json
