@@ -3,8 +3,8 @@ name: Java with Maven Automated Testing Pipeline
 on:
   push:
     branches: [ "main" ]
-    paths:
-    - 'selenium-test/*'
+   # paths:
+   # - 'selenium-test/*'
   pull_request:
     branches: [ "main" ]
 
@@ -23,5 +23,5 @@ jobs:
        
     - name: Build with Maven
       run: |
-         # cd selenium-test
-         mvn -f  selenium-test clean test --file selenium-test/pom.xml
+         cd selenium-test
+         mvn -f  selenium-test clean test --file pom.xml
