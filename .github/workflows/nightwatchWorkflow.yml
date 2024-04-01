@@ -40,6 +40,6 @@ jobs:
 
       - name: Install dependencies and run Nightwatch Tests
         run: |
-          cd nightwatch-test
+          
           npm install
           npm run nightwatch
