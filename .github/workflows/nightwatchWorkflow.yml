@@ -27,7 +27,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Change Directory
-        run: cd nightwatch-test
+        # run: cd nightwatch-test
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -36,6 +36,6 @@ jobs:
 
       - name: Install dependencies and run Nightwatch Tests
         run: |
-          # cd nightwatch-test
+          cd nightwatch-test
           npm install
            node nightwatch.json
