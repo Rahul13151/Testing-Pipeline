@@ -41,10 +41,8 @@ jobs:
         with:
           node-version: 'latest'
 
-      - name: Install dependencies
+      - name: Install dependencies and run Nightwatch Tests
         run: |
           cd nightwatch-test
           npm install
-
-      - name: Run Nightwatch tests
-        run: npm run nightwatch
+          npm run nightwatch
