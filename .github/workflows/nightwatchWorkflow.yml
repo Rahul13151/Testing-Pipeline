@@ -41,11 +41,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 'latest'
-
-      - name: Install dependencies and run Nightwatch Tests
-        run: |
-          cd nightwatch-test
-          npm install
-          node nightwatch.json
-          npx nightwatch
-      
+          cache: 'npm' 
+      - name: npm-install
+        run: npm ci
+      - run: sudo apt-get install xvfb
+      - name: Run Nightwatch tests
+        run: xvfb-run --auto-servernum npm test -- --env chrome
