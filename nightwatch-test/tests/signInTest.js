@@ -6,8 +6,8 @@ const signIn_Tests = {
 
     //Opening and Maximizing browser window before Each Test
     beforeEach:(browser)=>{
-        
         console.log("Running Sign in Test")
+        // Maximizing window
         browser.window.maximize()           
     },
 
