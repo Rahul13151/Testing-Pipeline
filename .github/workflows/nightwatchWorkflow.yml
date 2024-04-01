@@ -32,12 +32,16 @@ jobs:
      # - name: Change Directory
       #  run: cd nightwatch-test
    
-    
-      - name: Set up Node.js
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+         #node-version: $undefined
+         cache: 'npm'
+ 
+      - name: Use Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 21
-          cache: 'npm' 
       - name: npm-install
         run: |
            cd nightwatch-test
