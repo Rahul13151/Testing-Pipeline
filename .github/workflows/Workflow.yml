@@ -42,7 +42,9 @@ jobs:
           node-version: '16.15.0'
 
       - name: Install dependencies
-        run: npm install
+        run: |
+          cd nightwatch-test
+          npm install
 
       - name: Run Nightwatch tests
         run: npm run nightwatch
