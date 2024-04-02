@@ -43,7 +43,7 @@ jobs:
            cd nightwatch-test
            npm ci
       - name: xvfb-install   
-      - run:  |
+        run:  |
            cd nightwatch-test
            sudo apt-get install xvfb
       - name: Run Nightwatch tests
