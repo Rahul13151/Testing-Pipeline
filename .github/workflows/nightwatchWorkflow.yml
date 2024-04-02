@@ -52,4 +52,5 @@ jobs:
       - name: Run Nightwatch tests
         run:  |
            cd nightwatch-test
-           xvfb-run --auto-servernum npm test
+           npx nightwatch
+          # xvfb-run --auto-servernum npm test
