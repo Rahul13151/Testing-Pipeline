@@ -1,6 +1,6 @@
 const signInData ={
-    email:"testadmin",
-    password:"testadmin",
+    email:"testemployee",
+    password:"testemployee",
     invalidPassword:"admin"
 };
 module.exports = {signInData};
