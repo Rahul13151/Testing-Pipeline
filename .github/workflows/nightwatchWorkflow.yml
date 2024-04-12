@@ -93,7 +93,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [windows-latest]
+        os: [macos-latest]
         
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
