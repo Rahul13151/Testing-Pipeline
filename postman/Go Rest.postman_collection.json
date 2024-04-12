@@ -1,0 +1,1579 @@
+{
+	"info": {
+		"_postman_id": "025377d6-0535-477a-903d-0798cf9e8f53",
+		"name": "Go Rest",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33351950"
+	},
+	"item": [
+		{
+			"name": "Post : Create User",
+			"item": [
+				{
+					"name": "Create User(TC-01)[P] User Should Be Created With Valid Inputs",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"pm.environment.set(\"id\",jsonData.id);",
+									"pm.test(\"Status code is 201\", function () { ",
+									"    pm.response.to.have.status(201);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var randomName = pm.variables.replaceIn(\"{{$randomFirstName}}\");",
+									"",
+									"let genderArr = [\"male\",\"female\"];",
+									"function getRandomGender() {",
+									"    return (genderArr[(Math.floor(Math.random() *genderArr.length))]);",
+									"}",
+									"",
+									"let statusArr = [\"active\",\"inactive\"];",
+									"function getRandomStatus() {",
+									"    return (statusArr[(Math.floor(Math.random() *statusArr.length))]);",
+									"}",
+									"",
+									"var randomEmailValue = pm.variables.replaceIn(\"{{$randomEmail}}\")",
+									"pm.environment.set(\"name\", randomName);",
+									"pm.environment.set(\"email\", randomEmailValue);",
+									"pm.environment.set(\"gender\",getRandomGender())",
+									"pm.environment.set(\"status\",getRandomStatus())"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"name\":\"{{name}}\", \"gender\":\"{{gender}}\", \"email\":\"{{email}}\", \"status\":\"{{status}}\"}"
+						},
+						"url": {
+							"raw": "{{baseurl}}/public/v2/users",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"public",
+								"v2",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create User(TC-02)[N] User Should Not Be Created With Invalid Email",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var randomInt = Math.floor(Math.random() * 1000);",
+									" ",
+									"var username = \"admin\"+randomInt ;",
+									"",
+									"let arr = [\"male\",\"female\"];",
+									" ",
+									"function getRandomGender() {",
+									"    return (arr[(Math.floor(Math.random() * arr.length))]);",
+									"} ",
+									"pm.environment.set(\"name\", username);",
+									"pm.environment.set(\"gender\",getRandomGender());",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 422\", function () {",
+									"    pm.response.to.have.status(422);",
+									"});",
+									"pm.test(\"'email is invalid' is returned as api response\",()=>{",
+									"    const responseJson = pm.response.json();",
+									"    pm.expect(responseJson[0].field).to.eql('email');",
+									"    pm.expect(responseJson[0].message).to.eql(\"is invalid\")",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"name\":\"{{name}}\", \"gender\":\"{{gender}}\", \"email\":\"Invalid_mail\", \"status\":\"{{status}}\"}"
+						},
+						"url": {
+							"raw": "{{baseurl}}/public/v2/users",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"public",
+								"v2",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create User(TC-03)[N] User Should Not Be Created if an user pre-exsist with the same email",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var randomInt = Math.floor(Math.random() * 1000);",
+									" ",
+									"var username = \"admin\"+randomInt ;",
+									"",
+									"let arr = [\"male\",\"female\"];",
+									" ",
+									"function getRandomGender() {",
+									"    return (arr[(Math.floor(Math.random() * arr.length))]);",
+									"} ",
+									"pm.environment.set(\"name\", username);",
+									"pm.environment.set(\"gender\",getRandomGender());",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 422 - Unprocessable Entity\", function () {",
+									"    pm.response.to.have.status(422);",
+									"});",
+									"pm.test(\"'email has already been taken' is returned as api response\",()=>{",
+									"    const responseJson = pm.response.json();",
+									"    pm.expect(responseJson[0].field).to.eql('email');",
+									"    pm.expect(responseJson[0].message).to.eql(\"has already been taken\")",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"name\":\"{{name}}\", \"gender\":\"{{gender}}\", \"email\":\"{{email}}\", \"status\":\"{{status}}\"}"
+						},
+						"url": {
+							"raw": "{{baseurl}}/public/v2/users",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"public",
+								"v2",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create User(TC-04)[P] User can be created with pre-exsisting name,gender and status",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var randomEmailValue = pm.variables.replaceIn(\"{{$randomEmail}}\")",
+									"pm.environment.set(\"email\", randomEmailValue);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201-Created\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"name\":\"{{name}}\", \"gender\":\"{{gender}}\", \"email\":\"{{email}}\", \"status\":\"{{status}}\"}"
+						},
+						"url": {
+							"raw": "{{baseurl}}/public/v2/users",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"public",
+								"v2",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create User(TC-05)[N] Name field cannot be blank",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"let arr = [\"male\",\"female\"];",
+									" ",
+									"function getRandomGender() {",
+									"    return (arr[(Math.floor(Math.random() * arr.length))]);",
+									"}",
+									"",
+									"var randomEmailValue = pm.variables.replaceIn(\"{{$randomEmail}}\");",
+									"pm.environment.set(\"email\", randomEmailValue);",
+									"pm.environment.set(\"gender\",getRandomGender())",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 422 - Unprocessable Entity\", function () {",
+									"    pm.response.to.have.status(422);",
+									"});",
+									"pm.test(\"'name can't be blank' is returned as api response\",()=>{",
+									"    const responseJson = pm.response.json();",
+									"    pm.expect(responseJson[0].field).to.eql('name');",
+									"    pm.expect(responseJson[0].message).to.eql(\"can't be blank\")",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"name\":\"\", \"gender\":\"{{gender}}\", \"email\":\"Invalid_mail\", \"status\":\"{{status}}\"}"
+						},
+						"url": {
+							"raw": "{{baseurl}}/public/v2/users",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"public",
+								"v2",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create User(TC-06 )[N] Email field cannot be blank",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var randomName = pm.variables.replaceIn(\"{{$randomFirstName}}\");",
+									"let arr = [\"male\",\"female\"];",
+									" ",
+									"function getRandomGender() {",
+									"    return (arr[(Math.floor(Math.random() * arr.length))]);",
+									"}",
+									"",
+									"var randomEmailValue = pm.variables.replaceIn(\"{{$randomEmail}}\");",
+									"",
+									"pm.environment.set(\"name\", randomName);",
+									"pm.environment.set(\"email\", randomEmailValue);",
+									"pm.environment.set(\"gender\",getRandomGender())",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 422 - Unprocessable Entity\", function () {",
+									"    pm.response.to.have.status(422);",
+									"});",
+									"pm.test(\"'email can't be blank' is returned as api response\",()=>{",
+									"    const responseJson = pm.response.json();",
+									"    pm.expect(responseJson[0].field).to.eql('email');",
+									"    pm.expect(responseJson[0].message).to.eql(\"can't be blank\")",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"name\":\"{{name}}\", \"gender\":\"{{gender}}\", \"email\":\"\", \"status\":\"{{status}}\"}"
+						},
+						"url": {
+							"raw": "{{baseurl}}/public/v2/users",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"public",
+								"v2",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create User(TC-07 )[N] Gender field cannot have a random value or blank",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var randomName = pm.variables.replaceIn(\"{{$randomFirstName}}\");",
+									"let statusArr = [\"active\",\"inactive\"];",
+									"function getRandomStatus() {",
+									"    return (statusArr[(Math.floor(Math.random() *statusArr.length))]);",
+									"}",
+									"",
+									"var randomEmailValue = pm.variables.replaceIn(\"{{$randomEmail}}\");",
+									"",
+									"pm.environment.set(\"name\", randomName);",
+									"pm.environment.set(\"email\", randomEmailValue);",
+									"pm.environment.set(\"status\",getRandomStatus())",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 422 - Unprocessable Entity\", function () {",
+									"    pm.response.to.have.status(422);",
+									"});",
+									"pm.test(\"'gender can't be blank, can be male of female' error message returned\",()=>{",
+									"    const responseJson = pm.response.json();",
+									"    pm.expect(responseJson[0].field).to.eql('gender');",
+									"    // 'or' should be used in place of 'of'",
+									"    pm.expect(responseJson[0].message).to.eql(\"can't be blank, can be male or female\")",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"name\":\"{{name}}\", \"gender\":\"egr\", \"email\":\"{{email}}\", \"status\":\"{{status}}\"}"
+						},
+						"url": {
+							"raw": "{{baseurl}}/public/v2/users",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"public",
+								"v2",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create User(TC-08 )[N] Status field cannot have a random value or blank",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var randomName = pm.variables.replaceIn(\"{{$randomFirstName}}\");",
+									"",
+									"let genderArr = [\"male\",\"female\"];",
+									"function getRandomGender() {",
+									"    return (genderArr[(Math.floor(Math.random() *genderArr.length))]);",
+									"}",
+									"",
+									"var randomEmailValue = pm.variables.replaceIn(\"{{$randomEmail}}\");",
+									"",
+									"pm.environment.set(\"name\", randomName);",
+									"pm.environment.set(\"email\", randomEmailValue);",
+									"pm.environment.set(\"gender\",getRandomGender())"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 422 - Unprocessable Entity\", function () {",
+									"    pm.response.to.have.status(422);",
+									"});",
+									"pm.test(\"'status can't be blank, can be inactive or active' error message returned\",()=>{",
+									"    const responseJson = pm.response.json();",
+									"    pm.expect(responseJson[0].field).to.eql('status');",
+									"    pm.expect(responseJson[0].message).to.eql(\"can't be blank, can be inactive or active\")",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"name\":\"{{name}}\", \"gender\":\"{{gender}}\", \"email\":\"{{email}}\", \"status\":\"kjhsdf\"}"
+						},
+						"url": {
+							"raw": "{{baseurl}}/public/v2/users",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"public",
+								"v2",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create User(TC-09)[N] User Should Not Be Created with Invalid Token/Authentication",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 401 - Unauthorized\", function () {",
+									"    pm.response.to.have.status(401);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var randomName = pm.variables.replaceIn(\"{{$randomFirstName}}\");",
+									"",
+									"let genderArr = [\"male\",\"female\"];",
+									"function getRandomGender() {",
+									"    return (genderArr[(Math.floor(Math.random() *genderArr.length))]);",
+									"}",
+									"",
+									"let statusArr = [\"active\",\"inactive\"];",
+									"function getRandomStatus() {",
+									"    return (statusArr[(Math.floor(Math.random() *statusArr.length))]);",
+									"}",
+									"",
+									"var randomEmailValue = pm.variables.replaceIn(\"{{$randomEmail}}\");",
+									"",
+									"pm.environment.set(\"name\", randomName);",
+									"pm.environment.set(\"email\", randomEmailValue);",
+									"pm.environment.set(\"gender\",getRandomGender())",
+									"pm.environment.set(\"status\",getRandomStatus())"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer dffiogjdpou324"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"name\":\"{{name}}\", \"gender\":\"{{gender}}\", \"email\":\"{{email}}\", \"status\":\"{{status}}\"}"
+						},
+						"url": {
+							"raw": "{{baseurl}}/public/v2/users",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"public",
+								"v2",
+								"users"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Patch ; Update User",
+			"item": [
+				{
+					"name": "Update User(TC-11)[P] All fields must be updated with Valid User Credentials",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonResponse;",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"email,name,gender,status is updated\",()=>{",
+									"    pm.response.to.be.json;",
+									"    jsonResponse = pm.response.json();",
+									"    pm.expect(jsonResponse.name).to.eql('Shipra');",
+									"    pm.expect(jsonResponse.email).to.eql(\"admin@123.gmail.com\")",
+									"    pm.expect(jsonResponse.gender).to.eql('female');",
+									"    pm.expect(jsonResponse.status).to.eql(\"inactive\")",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"name\":\"Shipra\", \"status\":\"inactive\", \"gender\":\"female\",\"email\":\"admin@123.gmail.com\"}"
+						},
+						"url": {
+							"raw": "{{baseurl}}/public/v2/users/{{id}}",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"public",
+								"v2",
+								"users",
+								"{{id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update User(TC-12)[N] Relevant error message shown when an invalid user id is passed",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404-Not Found\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"pm.test(\"'Resource not found' message is shown\",()=>{",
+									"    var responseJson = pm.response.json();",
+									"    pm.expect(responseJson.message).to.eql('Resource not found');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"name\":\"Shipra\", \"status\":\"inactive\", \"gender\":\"female\",\"email\":\"admin@123.gmail.com\"}"
+						},
+						"url": {
+							"raw": "{{baseurl}}/public/v2/users/676779",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"public",
+								"v2",
+								"users",
+								"676779"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update User(TC-13)[N] User should not be Updated when an invalid Authorization Token is passed",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 401-Unauthorized\", function () {",
+									"    pm.response.to.have.status(401);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer 90f8d816ee8d03c521a09c65f8f3c1859778d6b4ba072829eb0e6053a05322ecf"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"name\":\"Shipra\", \"status\":\"inactive\", \"gender\":\"female\",\"email\":\"admin@123.gmail.com\"}"
+						},
+						"url": {
+							"raw": "{{baseurl}}/public/v2/users/{{id}}",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"public",
+								"v2",
+								"users",
+								"{{id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update User(TC-14)[N] Relevant Error message shown when request to update Id is passed",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 403-Forbidden\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"id\":6770429}"
+						},
+						"url": {
+							"raw": "{{baseurl}}/public/v2/users/{{id}}",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"public",
+								"v2",
+								"users",
+								"{{id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update User(TC-15)[P] Partial Update must be made with Valid Credential",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonResponse;",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"email,name,gender,status is updated\",()=>{",
+									"    pm.response.to.be.json;",
+									"    jsonResponse = pm.response.json();",
+									"    pm.expect(jsonResponse.name).to.eql('Ramesh');",
+									"    pm.expect(jsonResponse.gender).to.eql('male');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"name\":\"Ramesh\", \"gender\":\"Male\"}"
+						},
+						"url": {
+							"raw": "{{baseurl}}/public/v2/users/{{id}}",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"public",
+								"v2",
+								"users",
+								"{{id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update User(TC-16)[N] Update must not be made with Invalid Patch Data request",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let jsonResponse;",
+									"",
+									"pm.test(\"Status code is 422 Unprocessable Entity\", function () {",
+									"    pm.response.to.have.status(422);",
+									"});",
+									"",
+									"pm.test(\"email,name,gender,status is updated\",()=>{",
+									"    pm.response.to.be.json;",
+									"    jsonResponse = pm.response.json();",
+									"    pm.expect(jsonResponse[1].field).to.eql('email');",
+									"    pm.expect(jsonResponse[1].message).to.eql(\"is invalid\");",
+									"    pm.expect(jsonResponse[0].field).to.eql('gender');",
+									"    pm.expect(jsonResponse[0].message).to.eql(\"can't be blank, can be male or female\");",
+									"",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"email\":465046, \"gender\":\"third\"}"
+						},
+						"url": {
+							"raw": "{{baseurl}}/public/v2/users/{{id}}",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"public",
+								"v2",
+								"users",
+								"{{id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update User(TC-16)[N] Update must not be made with empty request Body",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//Should return 400-bad Request but as this same API is used for Get request so returning 200 will work",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{baseurl}}/public/v2/users/{{id}}",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"public",
+								"v2",
+								"users",
+								"{{id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Get : Get User/Users",
+			"item": [
+				{
+					"name": "Get : Get All Users",
+					"item": [
+						{
+							"name": "Get User(TC-21)[P] All Users should Be retrieved with valid URL",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status Code is 200\",()=>{",
+											"    pm.response.to.have.status(200);",
+											"})",
+											"pm.test(\"Verify payload contains expected field\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    console.log(jsonData);",
+											"    pm.expect(jsonData[0].id).to.exist;",
+											"    pm.expect(jsonData[0].name).to.exist;",
+											"    pm.expect(jsonData[0].email).to.exist;",
+											"    pm.expect(jsonData[0].gender).to.exist;",
+											"    pm.expect(jsonData[0].status).to.exist;",
+											"});",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"url": {
+									"raw": "{{baseurl}}/public/v2/users",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"public",
+										"v2",
+										"users"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get User(TC-22)[N] Users should Not Be retrieved with Invalid Access Token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status Code is 401-Unauthorized\", function () {",
+											"     pm.expect(pm.response.code).to.equal(401);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer 0f8816ee8d03c521a09c65f8f3c1859778d6b4ba072829eb0e6053a0532a"
+									}
+								],
+								"url": {
+									"raw": "{{baseurl}}/public/v2/users",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"public",
+										"v2",
+										"users"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Get : Get Single User",
+					"item": [
+						{
+							"name": "Get User(TC-25)[P] User should be retrieved with a valid user Id",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status Code is 200-OK\", function () {",
+											"     pm.expect(pm.response.code).to.equal(200);",
+											"});",
+											"pm.test(\"Response Schema is Valid\",function(){",
+											"    const schema = {",
+											"        type:'object',",
+											"        required:[\"id\",\"name\",\"email\",\"gender\",\"status\"],",
+											"        additionalProperties:true",
+											"    }",
+											"    pm.response.to.have.jsonSchema(schema);",
+											"})   ",
+											"",
+											"pm.test(\"Verify data type of field\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.id).to.be.a('number');",
+											"    pm.expect(jsonData.email).to.be.a('string');",
+											"    pm.expect(jsonData.gender).to.be.a('string');",
+											"    pm.expect(jsonData.status).to.be.a('string');",
+											"    pm.expect(jsonData.name).to.be.a('string');",
+											"});",
+											"pm.test(\"Response time is less than 1500ms which is \"+pm.response.responseTime, () => {",
+											" pm.expect(pm.response.responseTime).to.be.below(1500);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"url": {
+									"raw": "{{baseurl}}/public/v2/users/{{id}}",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"public",
+										"v2",
+										"users",
+										"{{id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get User(TC-26)[N] User should Not be retrieved with a Invalid user Id",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var jsonResponse ;",
+											"pm.test(\"Status Code is 404-Not Found\", function () {",
+											"     pm.expect(pm.response.code).to.equal(404);",
+											"});",
+											"pm.test(\"Verify message - Resource not found\", function () {",
+											"    jsonResponse = pm.response.json();",
+											"    pm.expect(jsonResponse.message).to.eql(\"Resource not found\")",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"url": {
+									"raw": "{{baseurl}}/public/v2/users/6770491",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"public",
+										"v2",
+										"users",
+										"6770491"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get User(TC-27)[N] User should Not be retrieved with an Invalid Token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status Code is 401-Unauthorized\", function () {",
+											"     pm.expect(pm.response.code).to.equal(401);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer 90f8816ee8d03c521a09c65f8f3c1859778d6b4ba072829eb0e6053a05322ebc"
+									}
+								],
+								"url": {
+									"raw": "{{baseurl}}/public/v2/users/{{id}}",
+									"host": [
+										"{{baseurl}}"
+									],
+									"path": [
+										"public",
+										"v2",
+										"users",
+										"{{id}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Delete : Delete User",
+			"item": [
+				{
+					"name": "Delete User(TC-31)[P] User Should be Deleted When a pre-exsisting User Id is passed",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});",
+									"pm.test(\"Verify response body is empty\", function () {",
+									"    pm.expect(pm.response.text()).to.be.empty;",
+									"});",
+									"pm.sendRequest({",
+									"    url: 'https://gorest.co.in/public/v2/users/'+ pm.environment.get(\"id\"),",
+									"    method: 'GET',",
+									"    header: {",
+									"        'Accept':'application/json',",
+									"        'Content-Type': 'application/json',",
+									"        'Authorization':'Bearer '+ pm.environment.get(\"token\")",
+									"    }   ",
+									"}, function (err, res) {",
+									"    pm.test('Afer Deleting Resource Not found',function(){",
+									"        pm.expect(res.code).to.be.eql(404);",
+									"    }); ",
+									"",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseurl}}/public/v2/users/{{id}}",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"public",
+								"v2",
+								"users",
+								"{{id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User(TC-32)[N] Relevant Error message shown with Invalid User Id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404 - Not Found\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"pm.test(\"'Resource Not found' error message returned\",()=>{",
+									"    let responseJson = pm.response.json();",
+									"   pm.expect(responseJson.message).to.eql(\"Resource not found\")",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseurl}}/public/v2/users/63532",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"public",
+								"v2",
+								"users",
+								"63532"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User(TC-33)[N] User Should Not be Deleted with an Invalid Authorization Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status Code is 401-Unauthorized\", function () {",
+									"     pm.expect(pm.response.code).to.equal(401);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer 90f8816ee8d03c521a09c65f8f3c1859778d6b4ba072829eb0e6053a05322ecm"
+							}
+						],
+						"url": {
+							"raw": "{{baseurl}}/public/v2/users/{{id}}",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"public",
+								"v2",
+								"users",
+								"{{id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User(TC-34)[N] Response time of Delete API should be less than 1500 ms",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"",
+									"pm.test(\"Response time is less than 1500ms\", () => {",
+									"    console.log(pm.response.responseTime);",
+									"    pm.expect(pm.response.responseTime).to.be.below(1500);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer 90f8816ee8d03c521a09c65f8f3c1859778d6b4ba072829eb0e6053a05322ecm"
+							}
+						],
+						"url": {
+							"raw": "{{baseurl}}/public/v2/users/{{id}}",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"public",
+								"v2",
+								"users",
+								"{{id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "users",
+			"item": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
