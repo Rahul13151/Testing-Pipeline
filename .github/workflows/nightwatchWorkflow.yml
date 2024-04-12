@@ -83,7 +83,7 @@ jobs:
       - name: xvfb-install   
         run:  |
            cd nightwatch-test
-           npm install xvfb
+           # npm install xvfb
       - name: Run Nightwatch tests
         run:  |
            cd nightwatch-test
