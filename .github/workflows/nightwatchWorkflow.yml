@@ -88,9 +88,9 @@ jobs:
         run:  |
            cd nightwatch-test
            npx nightwatch --headless
-Run_Nightwatch_Mac:
+  Run_Nightwatch_Mac:
     # The type of runner that the job will run on
-   runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [windows-latest]
