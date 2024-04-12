@@ -22,7 +22,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Chrome Install
-      uses: browser-actions/setup-chrome@v1
+      uses: browser-actions/setup-chrome@v4
     - name: Set up JDK 17
       uses: actions/setup-java@v3
       with:
