@@ -130,6 +130,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: nightwatch-reports
-          path: 
+          path: nightwatch-test/test-output
         # if: always()  # Ensure reports are uploaded even if tests fail
-        uses: actions/upload-artifact@v4
