@@ -24,7 +24,7 @@ jobs:
         npm install -g newman
 
     - name: Run Postman tests
-      run: newman run postman/Go Rest.postman_collection.json -e postman/test.postman_environment.json
+      run: newman run "postman/Go Rest.postman_collection.json" -e postman/test.postman_environment.json
 
     # Optionally, if you want to upload test reports as artifacts
     - name: Archive test reports
