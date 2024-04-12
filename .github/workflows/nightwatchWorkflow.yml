@@ -87,5 +87,6 @@ jobs:
       - name: Run Nightwatch tests
         run:  |
            cd nightwatch-test
-           npx nightwatch
+           npx nightwatch --headless
+           
   # , macos-latest,
