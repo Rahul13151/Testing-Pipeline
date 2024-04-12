@@ -88,5 +88,43 @@ jobs:
         run:  |
            cd nightwatch-test
            npx nightwatch --headless
+Run_Nightwatch_Mac:
+    # The type of runner that the job will run on
+   runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest]
+        
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    # Runs a single command using the runners shell
+      - name: Run a one-line script
+        run: echo Nightwatch Test Started!
+        
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+         #node-version: $undefined
+         cache: 'npm'
+ 
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 21
+      - name: npm-install
+        run: |
+           cd nightwatch-test
+           npm ci
+      - name: xvfb-install   
+        run:  |
+           cd nightwatch-test
+           # npm install xvfb
+      - name: Run Nightwatch tests
+        run:  |
+           cd nightwatch-test
+           npx nightwatch --headless
            
   # , macos-latest,
