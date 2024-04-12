@@ -126,5 +126,10 @@ jobs:
         run:  |
            cd nightwatch-test
            npx nightwatch --headless
-           
-  # , macos-latest,
+      - name: Archive test reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: nightwatch-reports
+          path: 
+        # if: always()  # Ensure reports are uploaded even if tests fail
+        uses: actions/upload-artifact@v4
