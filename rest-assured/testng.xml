@@ -3,7 +3,7 @@
 <suite name="All Test Suite">
     <test verbose="2" preserve-order="true" name="/home/knoldus/IdeaProjects/GoRest">
         <classes>
-            <class name="api.tests.UserTests">
+            <class name="api.tests.UserTest">
                 <methods>
                     <include name="createUserWithValidInputs"/>
                     <include name="createUserWithInvalidMail"/>
