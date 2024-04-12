@@ -30,5 +30,6 @@ jobs:
     - name: Archive test reports
       uses: actions/upload-artifact@v4
       with:
+        if: always()
         name: postman-test-reports
         path: newman/report
