@@ -1,0 +1,34 @@
+name: Postman Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  postman_tests:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Install Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+
+    - name: Install Postman
+      run: |
+        npm install -g newman
+
+    - name: Run Postman tests
+      run: newman run postman/Go Rest.postman_collection.json -e postman/test.postman_environment.json
+
+    # Optionally, if you want to upload test reports as artifacts
+    - name: Archive test reports
+      uses: actions/upload-artifact@v2
+      with:
+        name: postman-test-reports
+        path: newman/report
