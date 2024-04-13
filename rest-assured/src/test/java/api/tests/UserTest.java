@@ -17,7 +17,7 @@ import static api.utils.Config.token;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
-public class UserTests {
+public class UserTest {
 
     User userPayload;
 
