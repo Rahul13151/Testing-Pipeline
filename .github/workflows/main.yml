@@ -27,7 +27,7 @@ jobs:
     - name: Run Postman tests and Generate Report
       run: |
           cd postman
-          newman run "Go Rest.postman_collection.json" -e test.postman_environment.json -r html,json --reporter-html-export test_reports/report.html --reporter-json-export test_reports/report.json
+          newman run "Go Rest.postman_collection.json" -e test.postman_environment.json 
 
     # Upload test reports as artifacts
     - name: Archive test reports
