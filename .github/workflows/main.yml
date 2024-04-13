@@ -23,13 +23,15 @@ jobs:
       run: |
         npm install -g newman
 
-    - name: Run Postman tests
-      run: newman run "postman/Go Rest.postman_collection.json" -e postman/test.postman_environment.json
+    - name: Run Postman tests and Generate Report
+      run: |
+          cd postman
+          newman run "Go Rest.postman_collection.json" -e test.postman_environment.json -r html,json --reporter-html-export test_reports/report.html --reporter-json-export test_reports/report.json
 
-    # Optionally, if you want to upload test reports as artifacts
+    # Upload test reports as artifacts
     - name: Archive test reports
+      if: always()
       uses: actions/upload-artifact@v4
       with:
-        if: always()
         name: postman-test-reports
-        path: newman/report
+        path: postman/test_reports
