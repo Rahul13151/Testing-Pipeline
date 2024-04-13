@@ -20,10 +20,14 @@ jobs:
           java-version: '11' # Set the Java version you need
 
       - name: Build with Maven
-        run: mvn clean install -B
+        run: |
+          cd rest_assured
+          mvn clean install -B
       
       - name: Run Rest Assured tests
-        run: mvn clean test
+        run: |
+          cd rest_assured
+          mvn clean test
     # runs-on: ubuntu-latest
 
     # steps:
