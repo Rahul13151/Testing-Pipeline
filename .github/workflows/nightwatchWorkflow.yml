@@ -54,7 +54,7 @@ jobs:
         if: always() 
         uses: actions/upload-artifact@v4
         with:
-          name: nightwatch-reports
+          name: nightwatch-report-${{ matrix.os }}
           path: nightwatch-test/tests_output
 
 # Running Test using xvfb
