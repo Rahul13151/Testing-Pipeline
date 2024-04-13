@@ -22,6 +22,7 @@ jobs:
     - name: Install Postman
       run: |
         npm install -g newman
+        npm install newman-reporter-html
 
     - name: Run Postman tests and Generate Report
       run: |
