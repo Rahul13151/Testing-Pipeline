@@ -1,6 +1,8 @@
 name: Postman Tests
 
 on:
+  schedule:
+    - cron: '0 10 * * *' # Runs every day at 10:00 AM UTC
   push:
     branches: [ main ]
   pull_request:
@@ -36,3 +38,11 @@ jobs:
       with:
         name: postman-test-reports
         path: postman/test_reports
+    - name: Send email
+      uses: Softprops/sendmail-action@v4
+      with:
+        to: rahulgarg70100@gmail.com
+        from: rahul.garg@knoldus.com
+        subject: Daily Workflow Report
+        message: |
+          Your daily workflow has been executed successfully.
