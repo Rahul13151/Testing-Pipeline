@@ -12,88 +12,12 @@ on:
   workflow_dispatch:
 
 jobs:
-  Run_Nightwatch_Tests:
-    # The type of runner that the job will run on
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
-        
-    # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
-    # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Nightwatch Test Started!
-        
-      - name: Checkout code
-        uses: actions/checkout@v4
-        
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-        with:
-         #node-version: $undefined
-         cache: 'npm'
- 
-      - name: Use Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 21
-      - name: npm-install
-        run: |
-           cd nightwatch-test
-           npm ci
-      - name: xvfb-install   
-        run:  |
-           cd nightwatch-test
-           sudo apt-get install xvfb
-      - name: Run Nightwatch tests
-        run:  |
-           cd nightwatch-test
-           xvfb-run --auto-servernum npm test -- --env chrome
-  Run_Nightwatch_Window:
-    # The type of runner that the job will run on
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [windows-latest]
-        
-    # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
-    # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Nightwatch Test Started!
-        
-      - name: Checkout code
-        uses: actions/checkout@v4
-        
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-        with:
-         #node-version: $undefined
-         cache: 'npm'
- 
-      - name: Use Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 21
-      - name: npm-install
-        run: |
-           cd nightwatch-test
-           npm ci
-      - name: xvfb-install   
-        run:  |
-           cd nightwatch-test
-           # npm install xvfb
-      - name: Run Nightwatch tests
-        run:  |
-           cd nightwatch-test
-           npx nightwatch --headless
   Run_Nightwatch_Mac:
     # The type of runner that the job will run on
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-latest]
+        os: [ubuntu-latest,windows-latest,macos-latest]
         
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -127,8 +51,48 @@ jobs:
            cd nightwatch-test
            npx nightwatch --headless
       - name: Archive test reports
+        if: always() 
         uses: actions/upload-artifact@v4
         with:
           name: nightwatch-reports
-          path: nightwatch-test/test-output
-        # if: always()  # Ensure reports are uploaded even if tests fail
+          path: nightwatch-test/tests_output
+
+# Running Test using xvfb
+   # Run_Nightwatch_Tests:
+   #  # The type of runner that the job will run on
+   #  runs-on: ${{ matrix.os }}
+   #  strategy:
+   #    matrix:
+   #      os: [ubuntu-latest]
+        
+   #  # Steps represent a sequence of tasks that will be executed as part of the job
+   #  steps:
+   #  # Runs a single command using the runners shell
+   #    - name: Run a one-line script
+   #      run: echo Nightwatch Test Started!
+        
+   #    - name: Checkout code
+   #      uses: actions/checkout@v4
+        
+   #    - name: Checkout Repository
+   #      uses: actions/checkout@v4
+   #      with:
+   #       #node-version: $undefined
+   #       cache: 'npm'
+ 
+   #    - name: Use Node.js
+   #      uses: actions/setup-node@v4
+   #      with:
+   #        node-version: 21
+   #    - name: npm-install
+   #      run: |
+   #         cd nightwatch-test
+   #         npm ci
+   #    - name: xvfb-install   
+   #      run:  |
+   #         cd nightwatch-test
+   #         sudo apt-get install xvfb
+   #    - name: Run Nightwatch tests
+   #      run:  |
+   #         cd nightwatch-test
+   #         xvfb-run --auto-servernum npm test -- --env chrome
