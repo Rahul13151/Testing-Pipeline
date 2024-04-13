@@ -12,7 +12,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  Run_Nightwatch_Mac:
+  Run_Nightwatch_tests:
     # The type of runner that the job will run on
     runs-on: ${{ matrix.os }}
     strategy:
@@ -27,12 +27,6 @@ jobs:
         
       - name: Checkout code
         uses: actions/checkout@v4
-        
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-        with:
-         #node-version: $undefined
-         cache: 'npm'
  
       - name: Use Node.js
         uses: actions/setup-node@v4
@@ -42,10 +36,6 @@ jobs:
         run: |
            cd nightwatch-test
            npm ci
-      - name: xvfb-install   
-        run:  |
-           cd nightwatch-test
-           # npm install xvfb
       - name: Run Nightwatch tests
         run:  |
            cd nightwatch-test
