@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+
+<suite name="All Test Suite">
+    <test verbose="2" preserve-order="true"
+          name="/home/knoldus/Desktop/Testing-Pipeline/Testing-Pipeline/selenium-test">
+        <classes>
+            <class name="Test_Cases.AddToCartTest">
+                <methods>
+                    <include name="checkSiteLaunched"/>
+                    <include name="checkPageOnSearch"/>
+                    <include name="checkOnClickColorPattern"/>
+                </methods>
+            </class>
+        </classes>
+
+    </test>
+
+    <listeners>
+        <listener class-name="org.testng.reporters.EmailableReporter"/>
+    </listeners>
+</suite>
