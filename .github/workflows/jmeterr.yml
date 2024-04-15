@@ -1,0 +1,26 @@
+name: JMeter Tests
+
+on: [push]
+
+jobs:
+  jmeter:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Install Java
+      uses: actions/setup-java@v2
+      with:
+        java-version: '11'
+
+    - name: Download JMeter
+      run: |
+        wget https://downloads.apache.org/jmeter/binaries/apache-jmeter-5.4.1.tgz
+        tar -xzf apache-jmeter-5.4.1.tgz
+
+    - name: Run JMeter Tests
+      run: |
+        cd apache-jmeter-5.4.1/bin
+        ./jmeter -n -t jmeter/testscript.jmx -l jmeter/results.jtl
