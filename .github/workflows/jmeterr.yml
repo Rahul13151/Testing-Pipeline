@@ -23,4 +23,4 @@ jobs:
     - name: Run JMeter Tests
       run: |
         cd apache-jmeter-5.4.1/bin
-        ./jmeter -n -t jmeter/testscript.jmx -l jmeter/results.jtl
+        ./jmeter -n -t jmeter/testScript.jmx -l jmeter/results.jtl
