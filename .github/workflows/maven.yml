@@ -19,11 +19,13 @@ jobs:
       with:
         java-version: '11'
         distribution: 'adopt'
-    
+    - uses: browser-actions/setup-chrome@latest
+    - run: chrome --version
+     
     - name: Run Selenium tests
       run: |
         cd selenium-test
-        mvn clean test   
+        mvn -B clean test   
     # - name: Save test reports as artifacts
     #   uses: actions/upload-artifact@v4
     #   with:
