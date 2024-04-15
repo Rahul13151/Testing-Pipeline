@@ -19,10 +19,6 @@ jobs:
       with:
         java-version: '11'
         distribution: 'adopt'
-    - name: Build with Maven
-      run: |
-        cd selenium-test
-        mvn clean install -B
     
     - name: Run Selenium tests
       run: |
