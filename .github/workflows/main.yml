@@ -1,8 +1,6 @@
 name: Postman Tests
 
 on:
-  schedule:
-    - cron: '0 10 * * *' # Runs every day at 10:00 AM UTC
   push:
     branches: [ main ]
   pull_request:
